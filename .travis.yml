@@ -3,10 +3,23 @@ sudo: required # docker requires super user permissions
 services:
   - docker
 
-# what to do prior to running tests
+# What to do prior to running tests.
 before_install:
   - docker build -t dannycanuto/docker-react -f Dockerfile.dev .
 
-# how to run tests
+# Run tests.
 script:
   - docker run -e CI=true dannycanuto/docker-react npm run test
+
+# Deploy to AWS Elastic Beanstalk on push to master branch.
+deploy:
+  provider: elasticbeanstalk
+  region: "us-east-1"
+  app: "docker-react"
+  env: "Dockerreact-env"
+  bucket_name: "elasticbeanstalk-us-east-1-995614840866"
+  bucket_path: "docker-react"
+  on:
+    branch: master
+  access_key_id: $AWS_ACCESS_KEY
+  secret_access_key: $AWS_SECRET_KEY
