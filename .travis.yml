@@ -1,0 +1,12 @@
+language: generic
+sudo: required # docker requires super user permissions
+services:
+  - docker
+
+# what to do prior to running tests
+before_install:
+  - docker build -t dannycanuto/docker-react -f Dockerfile.dev .
+
+# how to run tests
+script:
+  - docker run -e CI=true dannycanuto/docker-react npm run test
